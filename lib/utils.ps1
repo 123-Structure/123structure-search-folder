@@ -1,19 +1,33 @@
 function Test-ProjectNumber {
-  param (
-    [string]$projectNumber
-  )
-  $projectNumberRegex = "^\d{2}\.\d{2}\.\d{3,4}[A-Za-z]$"
-  return $projectNumber -match $projectNumberRegex
+  param([string]$projectNumber)
+
+  # Ancien format : AA.MM.000Y
+  $oldFormatRegex = '^\d{2}\.\d{2}\.\d{3}[A-Z]$'
+  # Nouveau format : AAMM0000
+  $newFormatRegex = '^\d{4}\d{4}$'
+
+  return ($projectNumber -match $oldFormatRegex -or $projectNumber -match $newFormatRegex)
 }
 
 function Get-YearAndMonth {
-  param (
-    [string]$projectNumber
-  )
-  $year = "20" + $projectNumber.Substring(0, 2)
-  $monthNumber = $projectNumber.Substring(3, 2)
-  return @($year, $monthNumber)
+    param([string]$projectNumber)
+
+    if ($projectNumber -match '^\d{2}\.\d{2}\.\d{3}[A-Z]$') {
+        # Ancien format
+        $parts = $projectNumber -split '\.'
+        $year = "20" + $parts[0]
+        $month =$parts[1]
+        return @($year, $month)
+    } elseif ($projectNumber -match '^\d{4}\d{4}$') {
+        # Nouveau format
+        $year = "20" + $projectNumber.Substring(0, 2)
+        $month = $projectNumber.Substring(2, 2)
+        return @($year, $month)
+    } else {
+        throw "Format de numéro de projet invalide."
+    }
 }
+
 
 function Get-ProjectTypeNumber {
   param (
