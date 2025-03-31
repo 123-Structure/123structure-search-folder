@@ -188,16 +188,22 @@ while ($true) {
     Write-Host "Mois: $month"
 
     # Construire le chemin de base avec le sous-dossier correct
-    $basePathY = Join-Path $driveY "$year\$month\Maison (9)"
+    $baseOldPathY = Join-Path $driveY "$year\$month\Maison (9)"
+    $basePathY = Join-Path $driveL "$year\$month Y"
     $basePathL = Join-Path $driveL "$year\$month"
 
     # Vérifier si les dossiers existent avant de rechercher
     $matchingFolders = @()
 
-    if (Test-Path $basePathY) {
+    if (Test-Path $baseOldPathY) {
+      # Rechercher dans $baseOldPathY si le chemin existe
+      $matchingFolders = Search-Folder -basePath $baseOldPathY -projectNumber $projectNumber
+    }
+    elseif (Test-Path $basePathY) {
       # Rechercher dans $basePathY si le chemin existe
       $matchingFolders = Search-Folder -basePath $basePathY -projectNumber $projectNumber
-    } elseif (Test-Path $basePathL) {
+    }
+    elseif (Test-Path $basePathL) {
       # Rechercher dans $basePathL si le chemin existe
       $matchingFolders = Search-Folder -basePath $basePathL -projectNumber $projectNumber
     }
