@@ -195,15 +195,15 @@ while ($true) {
     # Vérifier si les dossiers existent avant de rechercher
     $matchingFolders = @()
 
-    if (Test-Path $baseOldPathY) {
+    if ((Test-Path $baseOldPathY) -and (Search-Folder -basePath $baseOldPathY -projectNumber $projectNumber)) {
       # Rechercher dans $baseOldPathY si le chemin existe
       $matchingFolders = Search-Folder -basePath $baseOldPathY -projectNumber $projectNumber
     }
-    elseif (Test-Path $basePathY) {
+    elseif ((Test-Path $basePathY) -and (Search-Folder -basePath $basePathY -projectNumber $projectNumber)) {
       # Rechercher dans $basePathY si le chemin existe
       $matchingFolders = Search-Folder -basePath $basePathY -projectNumber $projectNumber
     }
-    elseif (Test-Path $basePathL) {
+    elseif ((Test-Path $basePathL) -and (Search-Folder -basePath $basePathL -projectNumber $projectNumber)) {
       # Rechercher dans $basePathL si le chemin existe
       $matchingFolders = Search-Folder -basePath $basePathL -projectNumber $projectNumber
     }
