@@ -10,6 +10,8 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $driveY = "O:"
 $driveL = "Y:\123 STRUCTURE"
+$baseShortcutPath = "C:\Users\DM\Desktop\AFFAIRES"
+
 
 Write-Host @"
  _ ____  _____   ____  _                   _                  
@@ -153,10 +155,24 @@ while ($true) {
       Write-Host ""
       Write-Host "Dossier correspondant trouvé: $folderPath" -ForegroundColor Green
       Write-Host "========================================================================"
-      # Write-Host ""
+      Write-Host ""
       # Read-Host -Prompt "Ouvrir le dossier ?"
       explorer $folderPath
       # break # Sortir de la boucle si le dossier a été ouvert
+
+      # Créer un raccourci
+      $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
+      if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
+        $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
+        $shortcutPath = Join-Path $baseShortcutPath $shortcutName
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $folderPath
+        $shortcut.Save()
+        Write-Host ""
+        Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
+        Write-Host "========================================================================"
+      }
     }
     else {
       Write-Host ""
@@ -213,10 +229,25 @@ while ($true) {
       # Si un dossier correspondant est trouvé
       $folderPath = $matchingFolders[0].FullName
       Write-Host ""
-      Write-Host "Dossier correspondant trouvé dans Y: $folderPath" -ForegroundColor Green
+      Write-Host "Dossier correspondant trouvé : $folderPath" -ForegroundColor Green
       Write-Host "========================================================================"
+      Write-Host ""
       explorer $folderPath
       # break # Sortir de la boucle si le dossier a été ouvert
+      
+      # Créer un raccourci
+      $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
+      if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
+        $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
+        $shortcutPath = Join-Path $baseShortcutPath $shortcutName
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $folderPath
+        $shortcut.Save()
+        Write-Host ""
+        Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
+        Write-Host "========================================================================"
+      }
     }
     else {
       Write-Host ""
