@@ -8,8 +8,8 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$driveY = "O:"
-$driveL = "Y:\123 STRUCTURE"
+$driveY = "\\aba-srv-vig\123-STRUCTURE"
+$driveL = "\\aba-srv-vig\VIG-STRUCTURE\123 STRUCTURE"
 # $baseShortcutPath = "C:\Users\DM\Desktop\AFFAIRES"
 
 
