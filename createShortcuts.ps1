@@ -39,7 +39,6 @@ try {
 
   # Déterminer quel exécutable PowerShell utiliser (Priorité à PS7)
   $pwsh7Path = "C:\Program Files\PowerShell\7\pwsh.exe"
-  $pwsh51Path = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
   $targetPwsh = ""
   $pwshVersion = ""
 
@@ -50,22 +49,26 @@ try {
     $pwshVersion = "7"
     Write-Host "✅ PowerShell 7 détecté à : $pwsh7Path" -ForegroundColor Green
   }
-  elseif (Test-Path $pwsh51Path) {
-    $targetPwsh = $pwsh51Path
-    $pwshVersion = "5.1"
-    Write-Host "⚠️ PowerShell 7 non trouvé." -ForegroundColor Yellow
-    Write-Host "✅ PowerShell 5.1 détecté à : $pwsh51Path" -ForegroundColor Green
-  }
   else {
-    # Tentative de secours via Get-Command
+    Write-Host "⚠️ PowerShell 7 non trouvé." -ForegroundColor Yellow
+    Write-Host "🚀 Tentative d'installation de PowerShell 7 via Winget..." -ForegroundColor Cyan
+    
+    # Tentative d'installation via Winget
     try {
-      $cmd = Get-Command powershell
-      $targetPwsh = $cmd.Source
-      $pwshVersion = "5.1 (Auto-détecté)"
-      Write-Host "✅ PowerShell trouvé via PATH : $targetPwsh" -ForegroundColor Green
+      Start-Process -FilePath "winget" -ArgumentList "install --id Microsoft.PowerShell --source winget --accept-package-agreements --accept-source-agreements" -Wait -NoNewWindow
+        
+      # Vérification post-installation
+      if (Test-Path $pwsh7Path) {
+        $targetPwsh = $pwsh7Path
+        $pwshVersion = "7 (Nouvellement installé)"
+        Write-Host "✅ Installation réussie ! PowerShell 7 détecté." -ForegroundColor Green
+      }
+      else {
+        throw "L'installation de PowerShell 7 semble avoir échoué ou le chemin n'est pas standard."
+      }
     }
     catch {
-      throw "Aucune version de PowerShell compatible n'a été trouvée !"
+      throw "Impossible d'installer PowerShell 7. Veuillez l'installer manuellement depuis https://aka.ms/PSWindows"
     }
   }
 
