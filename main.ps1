@@ -10,7 +10,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $driveY = "O:"
 $driveL = "Y:\123 STRUCTURE"
-$baseShortcutPath = "C:\Users\DM\Desktop\AFFAIRES"
+# $baseShortcutPath = "C:\Users\DM\Desktop\AFFAIRES"
 
 
 Write-Host @"
@@ -160,19 +160,19 @@ while ($true) {
       explorer $folderPath
       # break # Sortir de la boucle si le dossier a été ouvert
 
-      # Créer un raccourci
-      $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
-      if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
-        $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
-        $shortcutPath = Join-Path $baseShortcutPath $shortcutName
-        $shell = New-Object -ComObject WScript.Shell
-        $shortcut = $shell.CreateShortcut($shortcutPath)
-        $shortcut.TargetPath = $folderPath
-        $shortcut.Save()
-        Write-Host ""
-        Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
-        Write-Host "========================================================================"
-      }
+      # Créer un raccourci (Désactivé)
+      # $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
+      # if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
+      #   $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
+      #   $shortcutPath = Join-Path $baseShortcutPath $shortcutName
+      #   $shell = New-Object -ComObject WScript.Shell
+      #   $shortcut = $shell.CreateShortcut($shortcutPath)
+      #   $shortcut.TargetPath = $folderPath
+      #   $shortcut.Save()
+      #   Write-Host ""
+      #   Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
+      #   Write-Host "========================================================================"
+      # }
     }
     else {
       Write-Host ""
@@ -235,19 +235,19 @@ while ($true) {
       explorer $folderPath
       # break # Sortir de la boucle si le dossier a été ouvert
       
-      # Créer un raccourci
-      $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
-      if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
-        $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
-        $shortcutPath = Join-Path $baseShortcutPath $shortcutName
-        $shell = New-Object -ComObject WScript.Shell
-        $shortcut = $shell.CreateShortcut($shortcutPath)
-        $shortcut.TargetPath = $folderPath
-        $shortcut.Save()
-        Write-Host ""
-        Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
-        Write-Host "========================================================================"
-      }
+      # Créer un raccourci (Désactivé)
+      # $createShortcut = Read-Host "Voulez-vous créer un raccourci pour ce dossier ? Oui /Non "
+      # if ($createShortcut -eq "o" -or $createShortcut -eq "O" -or $createShortcut -eq "oui" -or $createShortcut -eq "OUI") {
+      #   $shortcutName = ($folderPath -split "\\")[-1] + ".lnk"
+      #   $shortcutPath = Join-Path $baseShortcutPath $shortcutName
+      #   $shell = New-Object -ComObject WScript.Shell
+      #   $shortcut = $shell.CreateShortcut($shortcutPath)
+      #   $shortcut.TargetPath = $folderPath
+      #   $shortcut.Save()
+      #   Write-Host ""
+      #   Write-Host "Raccourci créé : $shortcutPath" -ForegroundColor Green
+      #   Write-Host "========================================================================"
+      # }
     }
     else {
       Write-Host ""

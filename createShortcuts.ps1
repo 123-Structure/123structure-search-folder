@@ -18,14 +18,31 @@ if (-Not (Test-Path $shortcutsDir)) {
 # Initialiser l'objet WScript.Shell
 $shell = New-Object -ComObject WScript.Shell
 
+# Rechercher le fichier .ico le plus récent dans le dossier
+$iconFile = Get-ChildItem -Path $scriptDir -Filter "*.ico" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+if ($iconFile) {
+  $iconPath = $iconFile.FullName
+  Write-Host "Icône trouvée : $($iconFile.Name)" -ForegroundColor Cyan
+}
+
 # Créer un raccourci pour PowerShell 7
 $pwsh7Path = "C:\Program Files\PowerShell\7\pwsh.exe"
 if (Test-Path $pwsh7Path) {
   $shortcutPathPwsh7 = Join-Path $shortcutsDir "Open Folder (PowerShell 7).lnk"
+  
+  # Supprimer l'ancien raccourci s'il existe pour forcer le rafraîchissement
+  if (Test-Path $shortcutPathPwsh7) {
+    Remove-Item $shortcutPathPwsh7 -Force
+  }
+
   $shortcut = $shell.CreateShortcut($shortcutPathPwsh7)
   $shortcut.TargetPath = $pwsh7Path
   $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$mainScript`""
   $shortcut.WorkingDirectory = $scriptDir
+  if ($iconFile) {
+    $shortcut.IconLocation = $iconPath
+  }
   $shortcut.Save()
   Write-Host "Raccourci pour PowerShell 7 créé dans : $shortcutPathPwsh7" -ForegroundColor Green
 }
@@ -37,10 +54,19 @@ else {
 $pwsh51Path = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
 if (Test-Path $pwsh51Path) {
   $shortcutPathPwsh51 = Join-Path $shortcutsDir "Open Folder (PowerShell 5.1).lnk"
+
+  # Supprimer l'ancien raccourci s'il existe pour forcer le rafraîchissement
+  if (Test-Path $shortcutPathPwsh51) {
+    Remove-Item $shortcutPathPwsh51 -Force
+  }
+
   $shortcut = $shell.CreateShortcut($shortcutPathPwsh51)
   $shortcut.TargetPath = $pwsh51Path
   $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$mainScript`""
   $shortcut.WorkingDirectory = $scriptDir
+  if ($iconFile) {
+    $shortcut.IconLocation = $iconPath
+  }
   $shortcut.Save()
   Write-Host "Raccourci pour PowerShell 5.1 créé dans : $shortcutPathPwsh51" -ForegroundColor Green
 }
