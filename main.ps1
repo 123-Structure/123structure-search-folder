@@ -8,8 +8,11 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$driveY = "\\aba-srv-vig\123-STRUCTURE"
-$driveL = "\\aba-srv-vig\VIG-STRUCTURE\123 STRUCTURE"
+# Configuration des chemins réseau avec bascule IP automatique
+$serverIP = "192.168.148.231"
+$driveY = Resolve-NetworkPath -PrimaryPath "\\aba-srv-vig\123-STRUCTURE" -FallbackIP $serverIP
+$driveL = Resolve-NetworkPath -PrimaryPath "\\aba-srv-vig\VIG-STRUCTURE\123 STRUCTURE" -FallbackIP $serverIP
+
 # $baseShortcutPath = "C:\Users\DM\Desktop\AFFAIRES"
 
 
