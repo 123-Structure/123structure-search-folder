@@ -38,30 +38,62 @@ try {
   }
 
   # Déterminer quel exécutable PowerShell utiliser (Priorité à PS7)
-  $pwsh7Path = "C:\Program Files\PowerShell\7\pwsh.exe"
   $targetPwsh = ""
   $pwshVersion = ""
 
+  # Recherche robuste de pwsh.exe (chemins versionnés, PATH, Program Files)
+  function Find-Pwsh7 {
+    # 1. Chemins fixes courants (dossier 7, puis sous-dossiers versionnés)
+    $fixedPaths = @(
+      "C:\Program Files\PowerShell\7\pwsh.exe",
+      "C:\Program Files\PowerShell\7.5\pwsh.exe",
+      "C:\Program Files\PowerShell\7.4\pwsh.exe",
+      "C:\Program Files\PowerShell\7.3\pwsh.exe"
+    )
+    foreach ($path in $fixedPaths) {
+      if (Test-Path $path) { return $path }
+    }
+
+    # 2. Recherche dynamique dans Program Files\PowerShell (couvre toute version)
+    $psDir = "C:\Program Files\PowerShell"
+    if (Test-Path $psDir) {
+      $found = Get-ChildItem -Path $psDir -Filter "pwsh.exe" -Recurse -ErrorAction SilentlyContinue |
+        Sort-Object FullName -Descending |
+        Select-Object -First 1
+      if ($found) { return $found.FullName }
+    }
+
+    # 3. Recherche via PATH système
+    $fromPath = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($fromPath) { return $fromPath.Source }
+
+    return $null
+  }
+
   Write-Host "Recherche de PowerShell..."
 
-  if (Test-Path $pwsh7Path) {
-    $targetPwsh = $pwsh7Path
+  $foundPwsh = Find-Pwsh7
+
+  if ($foundPwsh) {
+    $targetPwsh = $foundPwsh
     $pwshVersion = "7"
-    Write-Host "✅ PowerShell 7 détecté à : $pwsh7Path" -ForegroundColor Green
+    Write-Host "✅ PowerShell 7 détecté à : $targetPwsh" -ForegroundColor Green
   }
   else {
     Write-Host "⚠️ PowerShell 7 non trouvé." -ForegroundColor Yellow
     Write-Host "🚀 Tentative d'installation de PowerShell 7 via Winget..." -ForegroundColor Cyan
-    
+
     # Tentative d'installation via Winget
     try {
       Start-Process -FilePath "winget" -ArgumentList "install --id Microsoft.PowerShell --source winget --accept-package-agreements --accept-source-agreements" -Wait -NoNewWindow
-        
-      # Vérification post-installation
-      if (Test-Path $pwsh7Path) {
-        $targetPwsh = $pwsh7Path
+
+      # Nouvelle recherche robuste post-installation
+      $foundPwsh = Find-Pwsh7
+
+      if ($foundPwsh) {
+        $targetPwsh = $foundPwsh
         $pwshVersion = "7 (Nouvellement installé)"
-        Write-Host "✅ Installation réussie ! PowerShell 7 détecté." -ForegroundColor Green
+        Write-Host "✅ Installation réussie ! PowerShell 7 détecté à : $targetPwsh" -ForegroundColor Green
       }
       else {
         throw "L'installation de PowerShell 7 semble avoir échoué ou le chemin n'est pas standard."
